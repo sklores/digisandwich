@@ -1,7 +1,8 @@
-<svg width="140" height="90" viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="18" y="26" width="104" height="12" rx="6" fill="#bfbfbf"/>
-  <rect x="12" y="40" width="116" height="20" rx="8" fill="#d9d9d9"/>
-  <rect x="22" y="46" width="96" height="8" rx="4" fill="#9f9f9f"/>
-  <path d="M28 68c0-4.418 3.582-8 8-8h68c4.418 0 8 3.582 8 8v6c0 2.209-1.791 4-4 4H32c-2.209 0-4-1.791-4-4z" fill="#c9c9c9"/>
-  <rect x="36" y="18" width="68" height="8" rx="4" fill="#9f9f9f" opacity="0.7"/>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="20" y="38" width="80" height="10" rx="5" stroke="#a8a8a8" stroke-width="4" fill="#f2f2f2"/>
+  <rect x="16" y="52" width="88" height="16" rx="8" stroke="#b5b5b5" stroke-width="4" fill="#fafafa"/>
+  <rect x="22" y="60" width="76" height="6" rx="3" fill="#c7c7c7"/>
+  <rect x="28" y="32" width="64" height="6" rx="3" fill="#d8d8d8" opacity="0.7"/>
+  <path d="M24 78c0-4.418 3.582-8 8-8h56c4.418 0 8 3.582 8 8v4c0 3.314-2.686 6-6 6H30c-3.314 0-6-2.686-6-6z" fill="#e1e1e1" stroke="#bcbcbc" stroke-width="2"/>
+  <path d="M32 48h56" stroke="#c0c0c0" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
 </svg>
