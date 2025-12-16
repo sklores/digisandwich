@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-label="Al Pastor + Cheese Steak placeholder">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f1f1f1" />
+      <stop offset="100%" stop-color="#dedede" />
+    </linearGradient>
+  </defs>
+  <rect width="900" height="540" fill="url(#bg3)" />
+  <rect x="110" y="120" width="680" height="300" rx="34" fill="#c9c9c9" opacity="0.75" />
+  <circle cx="450" cy="270" r="140" fill="#b8b8b8" opacity="0.6" />
+  <text x="50%" y="48%" fill="#3a3a3a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="42" font-weight="700" text-anchor="middle" dominant-baseline="middle">
+    Al Pastor + Cheese Steak
+  </text>
+  <text x="50%" y="60%" fill="#4e4e4e" font-family="'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="500" text-anchor="middle">
+    hoagie roll • pepper jack • pineapple chutney • al pastor beef • pickled red onion
+  </text>
+</svg>
