@@ -1,0 +1,147 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px 64px;
+  background: #f7f7f7;
+}
+
+.page {
+  width: min(960px, 100%);
+  background: #fcfcfc;
+  border: 1px solid #e3e3e3;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+  padding: 64px 40px 72px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
+  min-height: 140px;
+}
+
+.ghost-404 {
+  font-size: clamp(120px, 26vw, 240px);
+  font-weight: 700;
+  color: rgba(180, 180, 180, 0.25);
+  letter-spacing: 2px;
+  line-height: 0.9;
+  text-align: center;
+  user-select: none;
+}
+
+.sandwich-icon {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(180px, -30px);
+  width: clamp(70px, 12vw, 110px);
+  opacity: 0.6;
+}
+
+.band {
+  width: calc(100% + 24px);
+  margin: 0 -12px;
+  background: #dcdcdc;
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.band h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 600;
+  color: #2e2e2e;
+}
+
+.band p {
+  margin: 8px 0 0;
+  color: #555;
+  font-size: 16px;
+}
+
+.access-form {
+  margin: 36px auto 0;
+  width: min(460px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.access-form label {
+  font-size: 15px;
+  color: #444;
+}
+
+.access-form input {
+  padding: 12px 14px;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #f8f8f8;
+  color: #2f2f2f;
+}
+
+.access-form input:focus {
+  outline: 2px solid #b7b7b7;
+  background: #ffffff;
+}
+
+.primary-button {
+  margin-top: 4px;
+  padding: 12px 18px;
+  border: none;
+  background: #2f2f2f;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.primary-button:hover {
+  background: #1f1f1f;
+}
+
+.primary-button:active {
+  transform: translateY(1px);
+}
+
+.helper-button {
+  margin-top: 24px;
+  display: inline-flex;
+  align-self: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid #cfcfcf;
+  background: #efefef;
+  color: #2f2f2f;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.helper-button:hover {
+  background: #e7e7e7;
+  border-color: #bfbfbf;
+}
+
+.subtext {
+  margin-top: 12px;
+  color: #555;
+  text-align: center;
+}
