@@ -29,12 +29,12 @@ const items = [
 function Order() {
   return (
     <div className="app-shell">
-        <div className="page order-page">
-          <div className="hero">
-            <div className="ghost-404" aria-hidden="true">
-              404
-            </div>
+      <div className="page order-page">
+        <div className="hero">
+          <div className="ghost-404" aria-hidden="true">
+            404
           </div>
+        </div>
 
         <div className="band">
           <div>
