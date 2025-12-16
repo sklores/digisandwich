@@ -17,7 +17,9 @@ function NotFoundLanding() {
     <div className="app-shell">
       <div className="page">
         <div className="hero">
-          <div className="ghost-404">404</div>
+          <div className="ghost-404" aria-hidden>
+            404
+          </div>
           <img className="sandwich-icon" src={sandwichIcon} alt="Sandwich icon" />
         </div>
 
