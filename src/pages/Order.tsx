@@ -38,7 +38,7 @@ function Order() {
 
         <div className="band">
           <div>
-            <h1>Ordering Page</h1>
+            <h1 className="headline-glitch">Ordering Page</h1>
             <p>This is where the ordering UI will go.</p>
           </div>
         </div>
