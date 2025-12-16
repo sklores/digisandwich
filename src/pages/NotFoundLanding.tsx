@@ -20,7 +20,12 @@ function NotFoundLanding() {
           <div className="ghost-404" aria-hidden="true">
             404
           </div>
-          <img className="sandwich-icon" src={sandwichIcon} alt="Sandwich icon" />
+          <img
+            className="sandwich-icon"
+            src={sandwichIcon}
+            alt=""
+            aria-hidden="true"
+          />
         </div>
 
         <div className="band">
