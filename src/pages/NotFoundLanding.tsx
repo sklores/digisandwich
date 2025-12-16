@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import sandwichIcon from '../assets/sandwich.svg'
+import sandwichIcon from '../assets/sandwich-icon.svg'
 
 function NotFoundLanding() {
   const navigate = useNavigate()
@@ -17,8 +17,15 @@ function NotFoundLanding() {
     <div className="app-shell">
       <div className="page">
         <div className="hero">
-          <div className="ghost-404">404</div>
-          <img className="sandwich-icon" src={sandwichIcon} alt="Sandwich icon" />
+          <div className="ghost-404" aria-hidden="true">
+            404
+          </div>
+          <img
+            className="sandwich-icon"
+            src={sandwichIcon}
+            alt=""
+            aria-hidden="true"
+          />
         </div>
 
         <div className="band">
@@ -38,9 +45,6 @@ function NotFoundLanding() {
             onChange={(event) => setPassword(event.target.value)}
             autoComplete="off"
           />
-          <button className="primary-button" type="submit">
-            GO TO ORDERING
-          </button>
         </form>
       </div>
     </div>

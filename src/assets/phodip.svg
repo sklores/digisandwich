@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" role="img" aria-label="Pho Dip placeholder">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ededed" />
+      <stop offset="100%" stop-color="#dcdcdc" />
+    </linearGradient>
+  </defs>
+  <rect width="900" height="540" fill="url(#bg2)" />
+  <rect x="120" y="110" width="660" height="320" rx="32" fill="#cfcfcf" opacity="0.7" />
+  <path d="M180 300h540v52H180z" fill="#bcbcbc" opacity="0.6" />
+  <text x="50%" y="46%" fill="#3c3c3c" font-family="'Helvetica Neue', Arial, sans-serif" font-size="50" font-weight="700" text-anchor="middle" dominant-baseline="middle">
+    Pho Dip — $22
+  </text>
+  <text x="50%" y="58%" fill="#515151" font-family="'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="500" text-anchor="middle">
+    hoisin grilled beef • jalapeño • cilantro • pho mayo • dipping broth
+  </text>
+</svg>
