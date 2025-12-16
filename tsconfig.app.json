@@ -10,6 +10,10 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "paths": {
+      "react-router-dom": ["./vendor/react-router-dom"],
+      "react-router-dom/*": ["./vendor/react-router-dom/*"]
+    },
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
