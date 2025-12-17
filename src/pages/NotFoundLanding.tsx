@@ -6,7 +6,16 @@ function NotFoundLanding() {
   const navigate = useNavigate()
   const [password, setPassword] = useState('')
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [glitchIndex, setGlitchIndex] = useState(0)
   const transitionTimer = useRef<number | undefined>(undefined)
+  const glitchTimer = useRef<number | undefined>(undefined)
+
+  const glitchMessages = [
+    'rerouting sandwich matrix…',
+    'recompiling bread schema…',
+    'decrypting sauce payload…',
+    'stabilizing crunchy portal…',
+  ]
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -15,15 +24,21 @@ function NotFoundLanding() {
     }
 
     setIsTransitioning(true)
+    glitchTimer.current = window.setInterval(() => {
+      setGlitchIndex((index) => (index + 1) % glitchMessages.length)
+    }, 220)
     transitionTimer.current = window.setTimeout(() => {
       navigate('/order')
-    }, 500)
+    }, 1400)
   }
 
   useEffect(() => {
     return () => {
       if (transitionTimer.current) {
         window.clearTimeout(transitionTimer.current)
+      }
+      if (glitchTimer.current) {
+        window.clearInterval(glitchTimer.current)
       }
     }
   }, [])
@@ -62,6 +77,34 @@ function NotFoundLanding() {
           />
         </form>
       </div>
+
+      {isTransitioning && (
+        <div className="glitch-transition" role="status" aria-live="polite">
+          <div className="glitch-panel">
+            <div className="glitch-panel__heading">system breach acknowledged</div>
+            <div className="glitch-panel__noise">
+              <span className="noise-bar" />
+              <span className="noise-bar" />
+              <span className="noise-bar" />
+            </div>
+            <div className="glitch-panel__feed">
+              <div className="feed-lines">
+                {glitchMessages.map((message, index) => (
+                  <span
+                    key={message}
+                    className={`feed-line ${index === glitchIndex ? 'is-active' : ''}`}
+                  >
+                    {message}
+                  </span>
+                ))}
+              </div>
+              <div className="feed-progress">
+                <span className="progress-glow" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
