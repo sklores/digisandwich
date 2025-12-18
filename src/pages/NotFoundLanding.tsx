@@ -1,19 +1,27 @@
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function NotFoundLanding() {
+export default function NotFoundLanding() {
   const navigate = useNavigate();
 
+  // Boot terminal overlay (3 seconds)
+  const [isBooting, setIsBooting] = useState(true);
+  const [terminalText, setTerminalText] = useState("");
+
+  // Page states
   const [password, setPassword] = useState("");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   // 404 glitch bursts (initial + occasional)
-  const [glitch404On, setGlitch404On] = useState(true);
+  const [glitch404On, setGlitch404On] = useState(false);
 
-  // Glitch line between 404+icon and the band
+  // Glitch line between sandwich + band
   const NORMAL_LINE = "ERR: 404 SANDWICH_NOT_FOUND";
   const PROMPT_LINE = "ENTER PASSWORD // DELICIOUS SANDWICHES ACCESS";
   const [glitchLine, setGlitchLine] = useState(NORMAL_LINE);
+
+  const bootTimer = useRef<number | undefined>(undefined);
+  const bootTick = useRef<number | undefined>(undefined);
 
   const transitionTimer = useRef<number | undefined>(undefined);
   const microTimer = useRef<number | undefined>(undefined);
@@ -21,13 +29,16 @@ function NotFoundLanding() {
 
   const glitchMessages = useMemo(
     () => [
-      "rerouting sandwich matrix…",
-      "recompiling bread schema…",
-      "decrypting sauce payload…",
-      "aligning cheese vectors…",
-      "hotfixing toasted edges…",
-      "forcing cache refresh…",
-      "negotiating with the void…",
+      "parsing recipe blocks…",
+      "hydrating dough cache…",
+      "toasting pipeline warmed…",
+      "searing brisket vectors…",
+      "pickling onions… OK",
+      "rendering jalapeños… OK",
+      "bbq checksum mismatch…",
+      "pho broth handshake failed…",
+      "access table updated…",
+      "deleting evidence…",
     ],
     []
   );
@@ -36,6 +47,31 @@ function NotFoundLanding() {
     () => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./\\:;+=-*#@!?",
     []
   );
+
+  const terminalScript = useMemo(() => {
+    // “writing sandwich recipes” vibe
+    return [
+      "> boot: sandwich-runtime v0.404",
+      "> mount: /recipes",
+      "> compile: brisket.brioche",
+      "  - seared_brisket()",
+      "  - pickled_onions()",
+      "  - jalapenos()",
+      "  - tangy_bbq_sauce()",
+      "> compile: pho_dip.hoagie",
+      "  - hoisin_grilled_beef()",
+      "  - cilantro()",
+      "  - pho_mayo()",
+      "  - dipping_broth()",
+      "> compile: al_pastor.cheese_steak",
+      "  - pepper_jack()",
+      "  - pineapple_chutney()",
+      "  - pickled_red_onion()",
+      "> execute: serve()",
+      "E: SANDWICH_NOT_FOUND (404)",
+      "> fallback: error_page()",
+    ].join("\n");
+  }, []);
 
   function scramble(base: string, intensity = 0.35) {
     const chars = base.split("");
@@ -62,7 +98,7 @@ function NotFoundLanding() {
       const pct = Math.min(1, t / durationMs);
 
       // start wild, settle down
-      const intensity = 0.72 - pct * 0.52; // ~0.72 -> ~0.20
+      const intensity = 0.78 - pct * 0.58; // ~0.78 -> ~0.20
       setGlitchLine(scramble(message, intensity));
 
       if (t >= durationMs) {
@@ -70,16 +106,15 @@ function NotFoundLanding() {
         lineTimer.current = undefined;
         setGlitchLine(message);
       }
-    }, 80);
+    }, 70);
   }
 
   function scheduleMicroGlitch() {
     const next = 8000 + Math.floor(Math.random() * 4000); // 8–12 seconds
     microTimer.current = window.setTimeout(() => {
-      if (!isTransitioning) {
+      if (!isBooting && !isTransitioning) {
         pulse404(520);
 
-        // make the line do something eye-catching
         runGlitchLineBurst(PROMPT_LINE, 1400);
         window.setTimeout(() => {
           if (!isTransitioning) runGlitchLineBurst(NORMAL_LINE, 650);
@@ -89,12 +124,39 @@ function NotFoundLanding() {
     }, next);
   }
 
+  // Boot overlay: type script for exactly 3 seconds
   useEffect(() => {
-    // initial boot punch
+    const start = Date.now();
+    const total = terminalScript.length;
+
+    bootTick.current = window.setInterval(() => {
+      const elapsed = Date.now() - start;
+      const p = Math.min(1, elapsed / 3000);
+      const chars = Math.max(0, Math.floor(total * p));
+      setTerminalText(terminalScript.slice(0, chars));
+      if (p >= 1) {
+        if (bootTick.current) window.clearInterval(bootTick.current);
+        bootTick.current = undefined;
+      }
+    }, 40);
+
+    bootTimer.current = window.setTimeout(() => {
+      setIsBooting(false);
+    }, 3000);
+
+    return () => {
+      if (bootTimer.current) window.clearTimeout(bootTimer.current);
+      if (bootTick.current) window.clearInterval(bootTick.current);
+    };
+  }, [terminalScript]);
+
+  // After boot, kick off initial glitch + micro-glitch schedule
+  useEffect(() => {
+    if (isBooting) return;
+
     pulse404(700);
     runGlitchLineBurst(PROMPT_LINE, 1200);
     window.setTimeout(() => runGlitchLineBurst(NORMAL_LINE, 700), 1500);
-
     scheduleMicroGlitch();
 
     return () => {
@@ -103,7 +165,7 @@ function NotFoundLanding() {
       if (lineTimer.current) window.clearInterval(lineTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isBooting]);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -111,7 +173,7 @@ function NotFoundLanding() {
 
     setIsTransitioning(true);
 
-    // one last punch before routing
+    // punch + glitch-out before routing
     pulse404(520);
     runGlitchLineBurst(PROMPT_LINE, 520);
 
@@ -126,7 +188,24 @@ function NotFoundLanding() {
   return (
     <div className={`app-shell ${isTransitioning ? "is-transitioning" : ""}`}>
       <div className="hero">
-        <div className="top-row" aria-hidden="true">
+        {isBooting && (
+          <div className="boot-overlay" aria-hidden="true">
+            <div className="terminal">
+              <div className="terminal-header">
+                <span className="dot" />
+                <span className="dot" />
+                <span className="dot" />
+                <span className="terminal-title">sandwich://boot</span>
+              </div>
+              <pre className="terminal-body">
+                {terminalText}
+                <span className="cursor">█</span>
+              </pre>
+            </div>
+          </div>
+        )}
+
+        <div className="stack" aria-hidden="true">
           <div className={`ghost-404 ${glitch404On ? "glitch-on" : ""}`}>404</div>
 
           <img
@@ -172,5 +251,3 @@ function NotFoundLanding() {
     </div>
   );
 }
-
-export default NotFoundLanding;
