@@ -1,5 +1,6 @@
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import RecipeRain from "../components/RecipeRain";
 
 export default function NotFoundLanding() {
   const navigate = useNavigate();
@@ -8,40 +9,29 @@ export default function NotFoundLanding() {
   const [isBooting, setIsBooting] = useState(true);
   const [terminalText, setTerminalText] = useState("");
 
-  // Page states
+  // Main page
   const [password, setPassword] = useState("");
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // 404 glitch bursts (initial + occasional)
   const [glitch404On, setGlitch404On] = useState(false);
 
-  // Glitch line between sandwich + band
+  // Glitch line under 404/icon row
   const NORMAL_LINE = "ERR: 404 SANDWICH_NOT_FOUND";
   const PROMPT_LINE = "ENTER PASSWORD // DELICIOUS SANDWICHES ACCESS";
   const [glitchLine, setGlitchLine] = useState(NORMAL_LINE);
 
+  // Password flow takeover
+  const [isRainTakeover, setIsRainTakeover] = useState(false);
+  const [isRainDissolving, setIsRainDissolving] = useState(false);
+
   const bootTimer = useRef<number | undefined>(undefined);
   const bootTick = useRef<number | undefined>(undefined);
 
-  const transitionTimer = useRef<number | undefined>(undefined);
   const microTimer = useRef<number | undefined>(undefined);
   const lineTimer = useRef<number | undefined>(undefined);
 
-  const glitchMessages = useMemo(
-    () => [
-      "parsing recipe blocks…",
-      "hydrating dough cache…",
-      "toasting pipeline warmed…",
-      "searing brisket vectors…",
-      "pickling onions… OK",
-      "rendering jalapeños… OK",
-      "bbq checksum mismatch…",
-      "pho broth handshake failed…",
-      "access table updated…",
-      "deleting evidence…",
-    ],
-    []
-  );
+  const takeoverTimer = useRef<number | undefined>(undefined);
+  const dissolveTimer = useRef<number | undefined>(undefined);
 
   const charset = useMemo(
     () => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./\\:;+=-*#@!?",
@@ -49,7 +39,6 @@ export default function NotFoundLanding() {
   );
 
   const terminalScript = useMemo(() => {
-    // “writing sandwich recipes” vibe
     return [
       "> boot: sandwich-runtime v0.404",
       "> mount: /recipes",
@@ -89,16 +78,15 @@ export default function NotFoundLanding() {
     window.setTimeout(() => setGlitch404On(false), ms);
   }
 
-  function runGlitchLineBurst(message: string, durationMs = 1300) {
+  function runGlitchLineBurst(message: string, durationMs = 1200) {
     if (lineTimer.current) window.clearInterval(lineTimer.current);
 
     const start = Date.now();
     lineTimer.current = window.setInterval(() => {
       const t = Date.now() - start;
       const pct = Math.min(1, t / durationMs);
+      const intensity = 0.82 - pct * 0.60; // wild -> calm
 
-      // start wild, settle down
-      const intensity = 0.78 - pct * 0.58; // ~0.78 -> ~0.20
       setGlitchLine(scramble(message, intensity));
 
       if (t >= durationMs) {
@@ -112,13 +100,12 @@ export default function NotFoundLanding() {
   function scheduleMicroGlitch() {
     const next = 8000 + Math.floor(Math.random() * 4000); // 8–12 seconds
     microTimer.current = window.setTimeout(() => {
-      if (!isBooting && !isTransitioning) {
+      if (!isBooting && !isRainTakeover) {
         pulse404(520);
-
-        runGlitchLineBurst(PROMPT_LINE, 1400);
+        runGlitchLineBurst(PROMPT_LINE, 1350);
         window.setTimeout(() => {
-          if (!isTransitioning) runGlitchLineBurst(NORMAL_LINE, 650);
-        }, 1750);
+          if (!isRainTakeover) runGlitchLineBurst(NORMAL_LINE, 650);
+        }, 1650);
       }
       scheduleMicroGlitch();
     }, next);
@@ -150,43 +137,54 @@ export default function NotFoundLanding() {
     };
   }, [terminalScript]);
 
-  // After boot, kick off initial glitch + micro-glitch schedule
+  // After boot, kick initial glitch + schedule micro-glitches
   useEffect(() => {
     if (isBooting) return;
 
     pulse404(700);
-    runGlitchLineBurst(PROMPT_LINE, 1200);
-    window.setTimeout(() => runGlitchLineBurst(NORMAL_LINE, 700), 1500);
+    runGlitchLineBurst(PROMPT_LINE, 1150);
+    window.setTimeout(() => runGlitchLineBurst(NORMAL_LINE, 700), 1400);
     scheduleMicroGlitch();
 
     return () => {
-      if (transitionTimer.current) window.clearTimeout(transitionTimer.current);
       if (microTimer.current) window.clearTimeout(microTimer.current);
       if (lineTimer.current) window.clearInterval(lineTimer.current);
+      if (takeoverTimer.current) window.clearTimeout(takeoverTimer.current);
+      if (dissolveTimer.current) window.clearTimeout(dissolveTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBooting]);
+
+  function startRainSequence() {
+    // Take over immediately
+    setIsRainTakeover(true);
+    setIsRainDissolving(false);
+
+    // Start dissolving near the end so it feels like it melts into /order
+    dissolveTimer.current = window.setTimeout(() => {
+      setIsRainDissolving(true);
+    }, 4200);
+
+    // Navigate at 5 seconds
+    takeoverTimer.current = window.setTimeout(() => {
+      navigate("/order");
+    }, 5000);
+  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!password.trim()) return;
 
-    setIsTransitioning(true);
-
-    // punch + glitch-out before routing
+    // small punch right as we enter takeover
     pulse404(520);
     runGlitchLineBurst(PROMPT_LINE, 520);
 
-    transitionTimer.current = window.setTimeout(() => {
-      navigate("/order");
-    }, 560);
+    // begin takeover
+    startRainSequence();
   }
 
-  const transitionMessage =
-    glitchMessages[Math.floor((Date.now() / 900) % glitchMessages.length)];
-
   return (
-    <div className={`app-shell ${isTransitioning ? "is-transitioning" : ""}`}>
+    <div className="app-shell">
       <div className="hero">
         {isBooting && (
           <div className="boot-overlay" aria-hidden="true">
@@ -205,6 +203,7 @@ export default function NotFoundLanding() {
           </div>
         )}
 
+        {/* Normal landing content (hidden visually when takeover is active via overlay) */}
         <div className="stack" aria-hidden="true">
           <div className={`ghost-404 ${glitch404On ? "glitch-on" : ""}`}>404</div>
 
@@ -236,15 +235,15 @@ export default function NotFoundLanding() {
           />
         </form>
 
-        {isTransitioning && (
-          <div className="transition-overlay" aria-hidden="true">
-            <div className="transition-panel">
-              <div className="transition-title">ACCESS GRANTED</div>
-              <div className="transition-sub">{transitionMessage}</div>
-              <div className="transition-bar">
-                <span className="transition-bar-glow" />
-              </div>
-            </div>
+        {/* 5s recipe-rain takeover after password */}
+        {isRainTakeover && (
+          <div
+            className={`rain-takeover ${
+              isRainDissolving ? "rain-dissolve" : ""
+            }`}
+            aria-hidden="true"
+          >
+            <RecipeRain variant="full" columns={10} className="rain-strong" />
           </div>
         )}
       </div>

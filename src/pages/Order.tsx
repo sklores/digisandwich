@@ -1,69 +1,70 @@
-import brisketImage from '../assets/brskt.svg'
-import phoDipImage from '../assets/phodip.svg'
-import alPastorImage from '../assets/alpstrchzstk.svg'
+import RecipeRain from "../components/RecipeRain";
 
-const items = [
-  {
-    name: 'Brisket',
-    price: '$18',
-    description:
-      'brioche bun, seared brisket, pickled onions and jalapeños, tangy bbq sauce',
-    image: brisketImage,
-  },
-  {
-    name: 'Pho Dip',
-    price: '$22',
-    description:
-      'hoagie roll, hoisin grilled beef, pickled jalapeño, cilantro, jalapeños, pickled white onion, pho mayo, pho dipping broth',
-    image: phoDipImage,
-  },
-  {
-    name: 'Al Pastor + Cheese Steak',
-    price: '',
-    description:
-      'hoagie roll, pepper jack cheese, pineapple chutney, al pastor beef, pickled red onion',
-    image: alPastorImage,
-  },
-]
+import brsktImg from "../assets/brskt.svg";
+import phodipImg from "../assets/phodip.svg";
+import alpImg from "../assets/alpstrchzstk.svg";
 
-const ghostLabel = 's&\\/\\/!cH'
-
-function Order() {
+export default function Order() {
   return (
-    <div className="app-shell">
-      <div className="page order-page">
-        <div className="hero">
-          <div className="ghost-404" aria-hidden="true">
-            {ghostLabel}
-          </div>
+    <div className="app-shell order-page">
+      <div className="page">
+        {/* moving border (left/right) */}
+        <div className="rain-border left" aria-hidden="true">
+          <RecipeRain variant="border" columns={3} />
         </div>
-
-        <div className="band">
-          <div>
-            <h1 className="headline-glitch">Ordering Page</h1>
-            <p>This is where the ordering UI will go.</p>
-          </div>
+        <div className="rain-border right" aria-hidden="true">
+          <RecipeRain variant="border" columns={3} />
         </div>
 
         <div className="menu-list">
-          {items.map((item) => (
-            <article className="menu-card" key={item.name}>
-              <div className="menu-image-wrap">
-                <img src={item.image} alt={item.name} loading="lazy" />
+          <div className="menu-card">
+            <div className="menu-image-wrap">
+              <img src={brsktImg} alt="Brisket" />
+            </div>
+            <div className="menu-content">
+              <div className="menu-header">
+                <h2>Brisket</h2>
+                <div className="price">$18</div>
               </div>
-              <div className="menu-content">
-                <div className="menu-header">
-                  <h2>{item.name}</h2>
-                  {item.price && <span className="price">{item.price}</span>}
-                </div>
-                <p>{item.description}</p>
+              <p>
+                brioche bun, seared brisket, pickled onions and jalapeños, tangy
+                bbq sauce
+              </p>
+            </div>
+          </div>
+
+          <div className="menu-card">
+            <div className="menu-image-wrap">
+              <img src={phodipImg} alt="Pho Dip" />
+            </div>
+            <div className="menu-content">
+              <div className="menu-header">
+                <h2>Pho Dip</h2>
+                <div className="price">$22</div>
               </div>
-            </article>
-          ))}
+              <p>
+                hoagie roll, hoisin grilled beef, pickled jalapeño, cilantro,
+                jalapeños, pickled white onion, pho mayo, pho dipping broth
+              </p>
+            </div>
+          </div>
+
+          <div className="menu-card">
+            <div className="menu-image-wrap">
+              <img src={alpImg} alt="Al Pastor + Cheese Steak" />
+            </div>
+            <div className="menu-content">
+              <div className="menu-header">
+                <h2>Al Pastor + Cheese Steak</h2>
+              </div>
+              <p>
+                hoagie roll, pepper jack cheese, pineapple chutney, al pastor
+                beef, pickled red onion
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-export default Order

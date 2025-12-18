@@ -61,10 +61,10 @@ body {
 .boot-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(8, 10, 12, 0.92);
+  background: rgba(8, 10, 12, 0.94);
   display: grid;
   place-items: center;
-  z-index: 50;
+  z-index: 60;
   animation: boot-fade-in 120ms ease-out;
 }
 
@@ -131,6 +131,55 @@ body {
 @keyframes cursor-blink {
   0%, 45% { opacity: 0.9; }
   46%, 100% { opacity: 0.0; }
+}
+
+/* ---- Recipe Rain (shared) ---- */
+
+.recipe-rain {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.recipe-rain.full {
+  opacity: 1;
+}
+
+.recipe-rain.border {
+  opacity: 1;
+}
+
+.recipe-col {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.recipe-stream {
+  margin: 0;
+  padding: 0 10px;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+
+  color: rgba(0, 0, 0, var(--alpha, 0.22));
+  transform: translateY(-55%) translateX(var(--drift, 0px));
+  animation: recipe-fall var(--dur, 9s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes recipe-fall {
+  0% { transform: translateY(-85%) translateX(var(--drift, 0px)); }
+  100% { transform: translateY(85%) translateX(var(--drift, 0px)); }
 }
 
 /* ---- Landing (404) ---- */
@@ -204,7 +253,7 @@ body {
   100% { filter: blur(0px); }
 }
 
-/* Sandwich icon (big + centered) */
+/* Sandwich icon */
 .sandwich-icon {
   width: clamp(96px, 18vw, 190px);
   height: auto;
@@ -219,6 +268,8 @@ body {
   display: flex;
   justify-content: center;
   margin: 8px 0 24px;
+  position: relative;
+  z-index: 2;
 }
 
 .glitch-line-text {
@@ -271,6 +322,8 @@ body {
   border-radius: 12px;
   padding: 20px 18px;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .band h1 {
@@ -294,6 +347,8 @@ body {
   flex-direction: column;
   gap: 10px;
   text-align: left;
+  position: relative;
+  z-index: 2;
 }
 
 .access-form label {
@@ -314,94 +369,85 @@ body {
   border-color: #9b9b9b;
 }
 
-/* Transition overlay (after password) */
-.transition-overlay {
+/* ---- 5s takeover overlay (full page) ---- */
+
+.rain-takeover {
   position: absolute;
   inset: 0;
+  background: rgba(6, 8, 10, 0.88);
+  z-index: 55;
+  overflow: hidden;
   display: grid;
-  place-items: center;
-  background: rgba(10, 10, 10, 0.45);
-  animation: overlay-in 200ms ease-out;
+  place-items: stretch;
+  animation: takeover-in 140ms ease-out;
 }
 
-@keyframes overlay-in {
+@keyframes takeover-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-.transition-panel {
-  width: min(520px, 88%);
-  background: rgba(245, 245, 245, 0.95);
-  border: 1px solid rgba(0,0,0,0.10);
-  border-radius: 14px;
-  padding: 18px 18px 16px;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
-  position: relative;
-  overflow: hidden;
+.rain-takeover .recipe-stream {
+  color: rgba(0, 255, 120, 0.32);
+  text-shadow: 0 0 10px rgba(0, 255, 120, 0.18);
 }
 
-.transition-panel::after {
-  content: "";
+.rain-takeover.rain-dissolve {
+  animation: takeover-out 800ms ease-in forwards;
+}
+
+@keyframes takeover-out {
+  0% { opacity: 1; filter: blur(0px); }
+  60% { opacity: 0.75; filter: blur(0.6px); }
+  100% { opacity: 0; filter: blur(2px); }
+}
+
+/* ---- Order page + recipe border ---- */
+
+.order-page .page {
+  padding-left: 70px;
+  padding-right: 70px;
+}
+
+@media (max-width: 640px) {
+  .order-page .page {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+/* Side borders that keep moving */
+.rain-border {
   position: absolute;
-  inset: 0;
-  opacity: 0.09;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.25) 0px,
-    rgba(0,0,0,0.25) 1px,
-    rgba(255,255,255,0) 3px,
-    rgba(255,255,255,0) 6px
-  );
+  top: 0;
+  bottom: 0;
+  width: 92px;
   pointer-events: none;
-}
-
-.transition-title {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  letter-spacing: 2px;
-  font-size: 12px;
-  color: rgba(0,0,0,0.72);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.transition-sub {
-  font-size: 14px;
-  color: rgba(0,0,0,0.70);
-  margin-bottom: 12px;
-}
-
-.transition-bar {
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.10);
+  opacity: 0.55;
+  z-index: 1;
   overflow: hidden;
-  position: relative;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.75), rgba(255,255,255,0.45));
 }
 
-.transition-bar-glow {
-  position: absolute;
-  inset: 0;
-  width: 42%;
-  background: rgba(0,0,0,0.35);
-  animation: bar-move 560ms linear infinite;
+.rain-border.left { left: 0; }
+.rain-border.right { right: 0; }
+
+.rain-border .recipe-stream {
+  color: rgba(0, 0, 0, 0.20);
 }
 
-@keyframes bar-move {
-  0% { transform: translateX(-110%); }
-  100% { transform: translateX(260%); }
+@media (max-width: 640px) {
+  .rain-border { display: none; }
 }
 
-/* ---- Order page shared styles (existing classnames) ---- */
-
-.order-page .hero {
-  margin-bottom: 26px;
-}
-
+/* Menu list */
 .menu-list {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-top: 26px;
+  margin-top: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .menu-card {
@@ -416,9 +462,7 @@ body {
 }
 
 @media (max-width: 640px) {
-  .menu-card {
-    grid-template-columns: 1fr;
-  }
+  .menu-card { grid-template-columns: 1fr; }
 }
 
 .menu-image-wrap {
@@ -435,9 +479,7 @@ body {
   opacity: 0.9;
 }
 
-.menu-content {
-  padding: 18px 18px 16px;
-}
+.menu-content { padding: 18px 18px 16px; }
 
 .menu-header {
   display: flex;
@@ -447,19 +489,6 @@ body {
   margin-bottom: 6px;
 }
 
-.menu-header h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.price {
-  font-weight: 800;
-  color: #111;
-}
-
-.menu-content p {
-  margin: 0;
-  color: #444;
-  line-height: 1.4;
-}
+.menu-header h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.price { font-weight: 800; color: #111; }
+.menu-content p { margin: 0; color: #444; line-height: 1.4; }
