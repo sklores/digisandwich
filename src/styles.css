@@ -63,7 +63,7 @@ body {
   background: rgba(8, 10, 12, 0.94);
   display: grid;
   place-items: center;
-  z-index: 80; /* above everything */
+  z-index: 80;
   animation: boot-fade-in 120ms ease-out;
 }
 
@@ -79,6 +79,7 @@ body {
   background: rgba(0,0,0,0.35);
   box-shadow: 0 18px 60px rgba(0,0,0,0.55);
   overflow: hidden;
+  position: relative;
 }
 
 .terminal-header {
@@ -118,6 +119,52 @@ body {
   line-height: 1.35;
   color: rgba(255,255,255,0.82);
   position: relative;
+}
+
+/* NEW: flash thumbnail glitches */
+.boot-flash {
+  position: absolute;
+  width: 170px;
+  height: 120px;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 5;
+  opacity: 0.0;
+  animation: flash-pop 170ms steps(1, end) forwards;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.35);
+}
+
+.boot-flash img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(0.92) brightness(0.95);
+  opacity: 0.92;
+}
+
+/* tiny scanline + glitch smear effect */
+.boot-flash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.10) 0px,
+    rgba(255,255,255,0.10) 1px,
+    rgba(0,0,0,0) 3px,
+    rgba(0,0,0,0) 6px
+  );
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+}
+
+@keyframes flash-pop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.98); filter: blur(1px); }
+  15%  { opacity: 0.95; filter: blur(0px); }
+  70%  { opacity: 0.85; }
+  100% { opacity: 0; }
 }
 
 .cursor {
@@ -236,7 +283,6 @@ body {
   100% { filter: blur(0px); }
 }
 
-/* Sandwich icon on landing */
 .sandwich-icon {
   width: clamp(96px, 18vw, 190px);
   height: auto;
@@ -297,7 +343,6 @@ body {
   100% { transform: translateX(420%) skewX(-18deg); }
 }
 
-/* Grey band headline */
 .band {
   margin: 0 auto 34px;
   max-width: 560px;
@@ -322,7 +367,6 @@ body {
   color: #555;
 }
 
-/* Password form */
 .access-form {
   max-width: 360px;
   margin: 0 auto;
@@ -357,7 +401,7 @@ body {
   position: absolute;
   inset: 0;
   background: rgba(6, 8, 10, 0.88);
-  z-index: 70; /* below boot overlay, above landing */
+  z-index: 70;
   overflow: hidden;
   display: grid;
   place-items: stretch;
@@ -387,7 +431,6 @@ body {
 /* ---------- ORDER PAGE ---------- */
 .order-shell { position: relative; }
 
-/* Full background rain inside the order page card */
 .order-rain-bg {
   position: absolute;
   inset: 0;
@@ -398,7 +441,6 @@ body {
   color: rgba(0, 0, 0, 0.20);
 }
 
-/* Title */
 .order-title-wrap {
   position: relative;
   z-index: 3;
@@ -416,7 +458,6 @@ body {
   user-select: none;
 }
 
-/* Title glitch loop */
 .glitch-title { position: relative; }
 
 .glitch-title::before,
@@ -460,7 +501,6 @@ body {
   75% { opacity: 0; }
 }
 
-/* Menu list */
 .menu-list {
   position: relative;
   z-index: 3;
