@@ -1,28 +1,394 @@
-:root {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #2f2f2f;
-  background-color: #f7f7f7;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-}
-
+/* Global */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
   margin: 0;
-  min-height: 100vh;
   background: #f7f7f7;
+  color: #222;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-a {
-  color: inherit;
+/* Shell */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px 64px;
 }
 
-button {
-  font-family: inherit;
+/* Main page card */
+.page,
+.hero {
+  width: min(960px, 100%);
+  background: #fcfcfc;
+  border: 1px solid #e3e3e3;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+  padding: 64px 40px 72px;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .page,
+  .hero {
+    padding: 54px 18px 64px;
+    border-radius: 16px;
+  }
+}
+
+/* Subtle scanlines (always on, very low) */
+.hero::after,
+.page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.18) 0px,
+    rgba(0,0,0,0.18) 1px,
+    rgba(255,255,255,0) 3px,
+    rgba(255,255,255,0) 6px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* ---- Landing (404) ---- */
+
+.top-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 34px);
+  margin-bottom: 10px;
+}
+
+/* 404 */
+.ghost-404 {
+  font-size: clamp(96px, 18vw, 190px);
+  font-weight: 750;
+  letter-spacing: 2px;
+  line-height: 0.9;
+  color: rgba(160, 160, 160, 0.22);
+  user-select: none;
+  position: relative;
+  transform: translateY(6px);
+}
+
+/* Two glitch layers (normally subtle) */
+.ghost-404::before,
+.ghost-404::after {
+  content: "404";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.10;
+  color: rgba(150, 150, 150, 0.30);
+}
+
+.ghost-404::before {
+  transform: translate(-1px, -1px);
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 35%);
+}
+
+.ghost-404::after {
+  transform: translate(1px, 1px);
+  clip-path: polygon(0 55%, 100% 45%, 100% 100%, 0 100%);
+}
+
+/* Micro-glitch burst class */
+.ghost-404.glitch-on {
+  animation: glitch-jitter 520ms steps(1, end) 1;
+}
+.ghost-404.glitch-on::before {
+  opacity: 0.28;
+  animation: glitch-slice 520ms steps(1, end) 1;
+}
+.ghost-404.glitch-on::after {
+  opacity: 0.22;
+  animation: glitch-slice 520ms steps(1, end) 1 reverse;
+}
+
+@keyframes glitch-jitter {
+  0% { transform: translateY(6px) translateX(0); opacity: 0.55; }
+  15% { transform: translateY(6px) translateX(-2px); opacity: 1; }
+  30% { transform: translateY(6px) translateX(2px); opacity: 0.65; }
+  45% { transform: translateY(6px) translateX(-1px); opacity: 1; }
+  60% { transform: translateY(6px) translateX(1px); opacity: 0.75; }
+  100% { transform: translateY(6px) translateX(0); opacity: 1; }
+}
+
+@keyframes glitch-slice {
+  0% { filter: blur(0px); }
+  25% { filter: blur(0.4px); }
+  50% { filter: blur(0px); }
+  75% { filter: blur(0.6px); }
+  100% { filter: blur(0px); }
+}
+
+/* Sandwich icon (same visual weight as 404) */
+.sandwich-icon {
+  width: clamp(96px, 18vw, 190px);
+  height: auto;
+  opacity: 0.34;
+  filter: grayscale(1);
+  user-select: none;
+}
+
+/* Glitch line */
+.glitch-line {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 24px;
+}
+
+.glitch-line-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: clamp(12px, 2.2vw, 14px);
+  letter-spacing: 1px;
+  color: rgba(35,35,35,0.78);
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.06);
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  animation: line-flicker 2.8s infinite steps(1, end);
+}
+
+.glitch-line-text::after {
+  content: "";
+  position: absolute;
+  left: -30%;
+  top: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.08), rgba(0,0,0,0));
+  opacity: 0.35;
+  transform: skewX(-18deg);
+  animation: line-sweep 3.2s infinite linear;
+}
+
+@keyframes line-flicker {
+  0% { opacity: 0.88; }
+  7% { opacity: 0.75; }
+  12% { opacity: 0.92; }
+  18% { opacity: 0.70; }
+  25% { opacity: 0.94; }
+  100% { opacity: 0.88; }
+}
+
+@keyframes line-sweep {
+  0% { transform: translateX(-140%) skewX(-18deg); }
+  100% { transform: translateX(420%) skewX(-18deg); }
+}
+
+/* Grey band headline */
+.band {
+  margin: 0 auto 34px;
+  max-width: 560px;
+  background: #dedede;
+  border-radius: 12px;
+  padding: 20px 18px;
+  text-align: center;
+}
+
+.band h1 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 650;
+  color: #222;
+}
+
+.band p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Password form */
+.access-form {
+  max-width: 360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.access-form label {
+  font-size: 15px;
+  color: #444;
+}
+
+.access-form input {
+  padding: 12px 14px;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+}
+
+.access-form input:focus {
+  border-color: #9b9b9b;
+}
+
+/* Transition overlay (after password) */
+.transition-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 10, 10, 0.45);
+  animation: overlay-in 200ms ease-out;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.transition-panel {
+  width: min(520px, 88%);
+  background: rgba(245, 245, 245, 0.95);
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.transition-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.09;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.25) 0px,
+    rgba(0,0,0,0.25) 1px,
+    rgba(255,255,255,0) 3px,
+    rgba(255,255,255,0) 6px
+  );
+  pointer-events: none;
+}
+
+.transition-title {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 2px;
+  font-size: 12px;
+  color: rgba(0,0,0,0.72);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.transition-sub {
+  font-size: 14px;
+  color: rgba(0,0,0,0.70);
+  margin-bottom: 12px;
+}
+
+.transition-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.10);
+  overflow: hidden;
+  position: relative;
+}
+
+.transition-bar-glow {
+  position: absolute;
+  inset: 0;
+  width: 42%;
+  background: rgba(0,0,0,0.35);
+  animation: bar-move 560ms linear infinite;
+}
+
+@keyframes bar-move {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(260%); }
+}
+
+/* ---- Order page shared styles (existing classnames) ---- */
+
+.order-page .hero {
+  margin-bottom: 26px;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.menu-card {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  border: 1px solid #e1e1e1;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.04);
+}
+
+@media (max-width: 640px) {
+  .menu-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.menu-image-wrap {
+  background: #efefef;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.menu-image-wrap img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  opacity: 0.9;
+}
+
+.menu-content {
+  padding: 18px 18px 16px;
+}
+
+.menu-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.menu-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.price {
+  font-weight: 800;
+  color: #111;
+}
+
+.menu-content p {
+  margin: 0;
+  color: #444;
+  line-height: 1.4;
+}
+
+/* legacy class (if present) */
+.headline-glitch {
+  position: relative;
 }
