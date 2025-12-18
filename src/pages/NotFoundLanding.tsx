@@ -31,6 +31,12 @@ export default function NotFoundLanding() {
   // Main page
   const [password, setPassword] = useState("");
 
+  // Glitch button label
+  const BUTTON_A = "ENTER";
+  const BUTTON_B = "LOAD MENU";
+  const [buttonLabel, setButtonLabel] = useState(BUTTON_B);
+  const [buttonGlitch, setButtonGlitch] = useState(false);
+
   // 404 glitch bursts (initial + occasional)
   const [glitch404On, setGlitch404On] = useState(false);
 
@@ -53,6 +59,8 @@ export default function NotFoundLanding() {
   const dissolveTimer = useRef<number | undefined>(undefined);
 
   const flashTimers = useRef<number[]>([]);
+  const buttonLoopTimer = useRef<number | undefined>(undefined);
+  const buttonGlitchTimer = useRef<number | undefined>(undefined);
 
   const charset = useMemo(
     () => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./\\:;+=-*#@!?",
@@ -169,10 +177,9 @@ export default function NotFoundLanding() {
 
     flashAt.forEach((t) => {
       const id = window.setTimeout(() => {
-        // random image + random-ish placement inside terminal box
         const src = menuPics[Math.floor(Math.random() * menuPics.length)];
-        const x = 12 + Math.floor(Math.random() * 56); // % (left)
-        const y = 10 + Math.floor(Math.random() * 55); // % (top)
+        const x = 14 + Math.floor(Math.random() * 58); // % (left)
+        const y = 12 + Math.floor(Math.random() * 56); // % (top)
         const rot = -10 + Math.floor(Math.random() * 21); // -10..+10 deg
         const scale = 0.92 + Math.random() * 0.24; // ~0.92..1.16
 
@@ -212,14 +219,29 @@ export default function NotFoundLanding() {
     window.setTimeout(() => runGlitchLineBurst(NORMAL_LINE, 700), 1400);
     scheduleMicroGlitch();
 
+    // button label loop: ENTER <-> LOAD MENU, subtle glitch on swap
+    buttonLoopTimer.current = window.setInterval(() => {
+      if (isRainTakeover) return;
+
+      setButtonGlitch(true);
+      if (buttonGlitchTimer.current) window.clearTimeout(buttonGlitchTimer.current);
+      buttonGlitchTimer.current = window.setTimeout(() => {
+        setButtonLabel((prev) => (prev === BUTTON_A ? BUTTON_B : BUTTON_A));
+        setButtonGlitch(false);
+      }, 170);
+    }, 3200);
+
     return () => {
       if (microTimer.current) window.clearTimeout(microTimer.current);
       if (lineTimer.current) window.clearInterval(lineTimer.current);
       if (takeoverTimer.current) window.clearTimeout(takeoverTimer.current);
       if (dissolveTimer.current) window.clearTimeout(dissolveTimer.current);
+
+      if (buttonLoopTimer.current) window.clearInterval(buttonLoopTimer.current);
+      if (buttonGlitchTimer.current) window.clearTimeout(buttonGlitchTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBooting]);
+  }, [isBooting, isRainTakeover]);
 
   function startRainSequence() {
     setIsRainTakeover(true);
@@ -257,7 +279,6 @@ export default function NotFoundLanding() {
                 <span className="terminal-title">sandwich://boot</span>
               </div>
 
-              {/* flash layer sits above the terminal text */}
               {bootFlash.on && (
                 <div
                   className="boot-flash"
@@ -309,14 +330,20 @@ export default function NotFoundLanding() {
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="off"
           />
+
+          <button
+            type="submit"
+            className={`enter-btn ${buttonGlitch ? "glitching" : ""}`}
+            disabled={!password.trim()}
+          >
+            {buttonLabel}
+          </button>
         </form>
 
         {/* 5s recipe-rain takeover after password */}
         {isRainTakeover && (
           <div
-            className={`rain-takeover ${
-              isRainDissolving ? "rain-dissolve" : ""
-            }`}
+            className={`rain-takeover ${isRainDissolving ? "rain-dissolve" : ""}`}
             aria-hidden="true"
           >
             <RecipeRain variant="full" columns={10} />

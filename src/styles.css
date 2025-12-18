@@ -63,7 +63,7 @@ body {
   background: rgba(8, 10, 12, 0.94);
   display: grid;
   place-items: center;
-  z-index: 80;
+  z-index: 80; /* above everything */
   animation: boot-fade-in 120ms ease-out;
 }
 
@@ -121,7 +121,7 @@ body {
   position: relative;
 }
 
-/* NEW: flash thumbnail glitches */
+/* Flash thumbnail glitches */
 .boot-flash {
   position: absolute;
   width: 170px;
@@ -144,7 +144,6 @@ body {
   opacity: 0.92;
 }
 
-/* tiny scanline + glitch smear effect */
 .boot-flash::after {
   content: "";
   position: absolute;
@@ -367,6 +366,7 @@ body {
   color: #555;
 }
 
+/* Password form + button */
 .access-form {
   max-width: 360px;
   margin: 0 auto;
@@ -394,6 +394,47 @@ body {
 
 .access-form input:focus {
   border-color: #9b9b9b;
+}
+
+/* NEW: glitching submit button */
+.enter-btn {
+  margin-top: 6px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.10);
+  color: rgba(0,0,0,0.78);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, opacity 120ms ease;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.enter-btn:hover {
+  background: rgba(0,0,0,0.14);
+}
+
+.enter-btn:active {
+  transform: translateY(1px);
+}
+
+.enter-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.enter-btn.glitching {
+  animation: btn-glitch 170ms steps(1, end) 1;
+}
+
+@keyframes btn-glitch {
+  0% { transform: translateX(0); filter: blur(0px); }
+  30% { transform: translateX(-2px); filter: blur(0.4px); }
+  60% { transform: translateX(2px); filter: blur(0px); }
+  100% { transform: translateX(0); filter: blur(0px); }
 }
 
 /* ---------- 5s TAKEOVER OVERLAY (green) ---------- */
