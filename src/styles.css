@@ -1,6 +1,7 @@
-/* Global */
+/* ---------- GLOBAL ---------- */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+
 body {
   margin: 0;
   background: #f7f7f7;
@@ -8,7 +9,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* Shell */
+/* ---------- SHELL / CARDS ---------- */
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -17,7 +18,6 @@ body {
   padding: 48px 16px 64px;
 }
 
-/* Main page card */
 .page,
 .hero {
   width: min(960px, 100%);
@@ -38,7 +38,7 @@ body {
   }
 }
 
-/* Subtle scanlines (always on, very low) */
+/* Light scanlines (very subtle) */
 .hero::after,
 .page::after {
   content: "";
@@ -56,15 +56,14 @@ body {
   mix-blend-mode: multiply;
 }
 
-/* ---- Boot overlay (3s terminal) ---- */
-
+/* ---------- BOOT OVERLAY (3s terminal) ---------- */
 .boot-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(8, 10, 12, 0.92);
+  background: rgba(8, 10, 12, 0.94);
   display: grid;
   place-items: center;
-  z-index: 50;
+  z-index: 80;
   animation: boot-fade-in 120ms ease-out;
 }
 
@@ -80,6 +79,7 @@ body {
   background: rgba(0,0,0,0.35);
   box-shadow: 0 18px 60px rgba(0,0,0,0.55);
   overflow: hidden;
+  position: relative;
 }
 
 .terminal-header {
@@ -121,6 +121,52 @@ body {
   position: relative;
 }
 
+/* NEW: flash thumbnail glitches */
+.boot-flash {
+  position: absolute;
+  width: 170px;
+  height: 120px;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 5;
+  opacity: 0.0;
+  animation: flash-pop 170ms steps(1, end) forwards;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.35);
+}
+
+.boot-flash img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(0.92) brightness(0.95);
+  opacity: 0.92;
+}
+
+/* tiny scanline + glitch smear effect */
+.boot-flash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.10) 0px,
+    rgba(255,255,255,0.10) 1px,
+    rgba(0,0,0,0) 3px,
+    rgba(0,0,0,0) 6px
+  );
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+}
+
+@keyframes flash-pop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.98); filter: blur(1px); }
+  15%  { opacity: 0.95; filter: blur(0px); }
+  70%  { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
 .cursor {
   display: inline-block;
   margin-left: 2px;
@@ -133,8 +179,44 @@ body {
   46%, 100% { opacity: 0.0; }
 }
 
-/* ---- Landing (404) ---- */
+/* ---------- RECIPE RAIN (shared) ---------- */
+.recipe-rain {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: stretch;
+  justify-content: space-between;
+  pointer-events: none;
+  user-select: none;
+}
 
+.recipe-col {
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.recipe-stream {
+  margin: 0;
+  padding: 0 10px;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, var(--alpha, 0.22));
+  transform: translateY(-55%) translateX(var(--drift, 0px));
+  animation: recipe-fall var(--dur, 9s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes recipe-fall {
+  0% { transform: translateY(-85%) translateX(var(--drift, 0px)); }
+  100% { transform: translateY(85%) translateX(var(--drift, 0px)); }
+}
+
+/* ---------- LANDING (404) ---------- */
 .stack {
   display: grid;
   place-items: center;
@@ -142,7 +224,6 @@ body {
   margin-bottom: 6px;
 }
 
-/* 404 */
 .ghost-404 {
   font-size: clamp(96px, 18vw, 190px);
   font-weight: 750;
@@ -153,7 +234,6 @@ body {
   position: relative;
 }
 
-/* Two glitch layers */
 .ghost-404::before,
 .ghost-404::after {
   content: "404";
@@ -174,7 +254,6 @@ body {
   clip-path: polygon(0 55%, 100% 45%, 100% 100%, 0 100%);
 }
 
-/* Micro-glitch burst class */
 .ghost-404.glitch-on {
   animation: glitch-jitter 520ms steps(1, end) 1;
 }
@@ -204,7 +283,6 @@ body {
   100% { filter: blur(0px); }
 }
 
-/* Sandwich icon (big + centered) */
 .sandwich-icon {
   width: clamp(96px, 18vw, 190px);
   height: auto;
@@ -219,6 +297,8 @@ body {
   display: flex;
   justify-content: center;
   margin: 8px 0 24px;
+  position: relative;
+  z-index: 2;
 }
 
 .glitch-line-text {
@@ -263,7 +343,6 @@ body {
   100% { transform: translateX(420%) skewX(-18deg); }
 }
 
-/* Grey band headline */
 .band {
   margin: 0 auto 34px;
   max-width: 560px;
@@ -271,6 +350,8 @@ body {
   border-radius: 12px;
   padding: 20px 18px;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .band h1 {
@@ -286,7 +367,6 @@ body {
   color: #555;
 }
 
-/* Password form */
 .access-form {
   max-width: 360px;
   margin: 0 auto;
@@ -294,6 +374,8 @@ body {
   flex-direction: column;
   gap: 10px;
   text-align: left;
+  position: relative;
+  z-index: 2;
 }
 
 .access-form label {
@@ -314,94 +396,118 @@ body {
   border-color: #9b9b9b;
 }
 
-/* Transition overlay (after password) */
-.transition-overlay {
+/* ---------- 5s TAKEOVER OVERLAY (green) ---------- */
+.rain-takeover {
   position: absolute;
   inset: 0;
+  background: rgba(6, 8, 10, 0.88);
+  z-index: 70;
+  overflow: hidden;
   display: grid;
-  place-items: center;
-  background: rgba(10, 10, 10, 0.45);
-  animation: overlay-in 200ms ease-out;
+  place-items: stretch;
+  animation: takeover-in 140ms ease-out;
 }
 
-@keyframes overlay-in {
+@keyframes takeover-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-.transition-panel {
-  width: min(520px, 88%);
-  background: rgba(245, 245, 245, 0.95);
-  border: 1px solid rgba(0,0,0,0.10);
-  border-radius: 14px;
-  padding: 18px 18px 16px;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
-  position: relative;
-  overflow: hidden;
+.rain-takeover .recipe-stream {
+  color: rgba(0, 255, 120, 0.34);
+  text-shadow: 0 0 10px rgba(0, 255, 120, 0.18);
 }
 
-.transition-panel::after {
-  content: "";
+.rain-takeover.rain-dissolve {
+  animation: takeover-out 800ms ease-in forwards;
+}
+
+@keyframes takeover-out {
+  0% { opacity: 1; filter: blur(0px); }
+  60% { opacity: 0.75; filter: blur(0.6px); }
+  100% { opacity: 0; filter: blur(2px); }
+}
+
+/* ---------- ORDER PAGE ---------- */
+.order-shell { position: relative; }
+
+.order-rain-bg {
   position: absolute;
   inset: 0;
-  opacity: 0.09;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.25) 0px,
-    rgba(0,0,0,0.25) 1px,
-    rgba(255,255,255,0) 3px,
-    rgba(255,255,255,0) 6px
-  );
-  pointer-events: none;
+  z-index: 1;
+  opacity: 0.55;
+}
+.order-rain-bg .recipe-stream {
+  color: rgba(0, 0, 0, 0.20);
 }
 
-.transition-title {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+.order-title-wrap {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 22px;
+}
+
+.order-title {
+  font-size: clamp(58px, 10vw, 110px);
+  font-weight: 850;
   letter-spacing: 2px;
-  font-size: 12px;
-  color: rgba(0,0,0,0.72);
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  color: rgba(0, 0, 0, 0.18);
+  line-height: 0.95;
+  user-select: none;
 }
 
-.transition-sub {
-  font-size: 14px;
-  color: rgba(0,0,0,0.70);
-  margin-bottom: 12px;
-}
+.glitch-title { position: relative; }
 
-.transition-bar {
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.10);
-  overflow: hidden;
-  position: relative;
-}
-
-.transition-bar-glow {
+.glitch-title::before,
+.glitch-title::after {
+  content: attr(data-text);
   position: absolute;
   inset: 0;
-  width: 42%;
-  background: rgba(0,0,0,0.35);
-  animation: bar-move 560ms linear infinite;
+  pointer-events: none;
+  opacity: 0;
+  color: rgba(0, 0, 0, 0.22);
 }
 
-@keyframes bar-move {
-  0% { transform: translateX(-110%); }
-  100% { transform: translateX(260%); }
+.glitch-title::before {
+  transform: translate(-2px, -1px);
+  clip-path: polygon(0 0, 100% 0, 100% 40%, 0 45%);
 }
 
-/* ---- Order page shared styles (existing classnames) ---- */
+.glitch-title::after {
+  transform: translate(2px, 1px);
+  clip-path: polygon(0 55%, 100% 45%, 100% 100%, 0 100%);
+}
 
-.order-page .hero {
-  margin-bottom: 26px;
+.glitch-title { animation: title-jitter 6.5s infinite; }
+.glitch-title::before { animation: title-slice 6.5s infinite; }
+.glitch-title::after { animation: title-slice 6.5s infinite reverse; }
+
+@keyframes title-jitter {
+  0%, 70%, 100% { transform: translateX(0); }
+  71% { transform: translateX(-2px); }
+  72% { transform: translateX(2px); }
+  73% { transform: translateX(-1px); }
+  74% { transform: translateX(1px); }
+  75% { transform: translateX(0); }
+}
+
+@keyframes title-slice {
+  0%, 70%, 100% { opacity: 0; }
+  71% { opacity: 0.30; }
+  72% { opacity: 0.18; }
+  73% { opacity: 0.26; }
+  75% { opacity: 0; }
 }
 
 .menu-list {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-top: 26px;
+  margin-top: 0;
 }
 
 .menu-card {
@@ -410,19 +516,17 @@ body {
   gap: 18px;
   border: 1px solid #e1e1e1;
   border-radius: 14px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.92);
   overflow: hidden;
   box-shadow: 0 10px 26px rgba(0,0,0,0.04);
 }
 
 @media (max-width: 640px) {
-  .menu-card {
-    grid-template-columns: 1fr;
-  }
+  .menu-card { grid-template-columns: 1fr; }
 }
 
 .menu-image-wrap {
-  background: #efefef;
+  background: rgba(239,239,239,0.9);
   display: grid;
   place-items: center;
   padding: 18px;
@@ -432,12 +536,12 @@ body {
   width: 100%;
   max-width: 220px;
   height: auto;
-  opacity: 0.9;
+  opacity: 0.95;
+  border-radius: 10px;
+  display: block;
 }
 
-.menu-content {
-  padding: 18px 18px 16px;
-}
+.menu-content { padding: 18px 18px 16px; }
 
 .menu-header {
   display: flex;
@@ -447,19 +551,6 @@ body {
   margin-bottom: 6px;
 }
 
-.menu-header h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.price {
-  font-weight: 800;
-  color: #111;
-}
-
-.menu-content p {
-  margin: 0;
-  color: #444;
-  line-height: 1.4;
-}
+.menu-header h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.price { font-weight: 800; color: #111; }
+.menu-content p { margin: 0; color: #444; line-height: 1.4; }
