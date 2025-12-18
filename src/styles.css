@@ -147,16 +147,7 @@ body {
   user-select: none;
 }
 
-.recipe-rain.full {
-  opacity: 1;
-}
-
-.recipe-rain.border {
-  opacity: 1;
-}
-
 .recipe-col {
-  flex: 1;
   min-width: 0;
   position: relative;
   overflow: hidden;
@@ -170,7 +161,6 @@ body {
   font-size: 12px;
   line-height: 1.15;
   letter-spacing: 0.5px;
-
   color: rgba(0, 0, 0, var(--alpha, 0.22));
   transform: translateY(-55%) translateX(var(--drift, 0px));
   animation: recipe-fall var(--dur, 9s) linear infinite;
@@ -402,42 +392,92 @@ body {
   100% { opacity: 0; filter: blur(2px); }
 }
 
-/* ---- Order page + recipe border ---- */
+/* ---- ORDER PAGE UPDATES ---- */
 
-.order-page .page {
-  padding-left: 70px;
-  padding-right: 70px;
+.order-shell {
+  position: relative;
 }
 
-@media (max-width: 640px) {
-  .order-page .page {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-}
-
-/* Side borders that keep moving */
-.rain-border {
+/* Full background rain inside the page card */
+.order-rain-bg {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 92px;
-  pointer-events: none;
-  opacity: 0.55;
+  inset: 0;
   z-index: 1;
-  overflow: hidden;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.75), rgba(255,255,255,0.45));
+  opacity: 0.30;
 }
 
-.rain-border.left { left: 0; }
-.rain-border.right { right: 0; }
-
-.rain-border .recipe-stream {
+.order-rain-bg .recipe-stream {
   color: rgba(0, 0, 0, 0.20);
 }
 
-@media (max-width: 640px) {
-  .rain-border { display: none; }
+/* Title */
+.order-title-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 22px;
+}
+
+.order-title {
+  font-size: clamp(58px, 10vw, 110px);
+  font-weight: 750;
+  letter-spacing: 2px;
+  color: rgba(0,0,0,0.12);
+  user-select: none;
+  line-height: 0.95;
+}
+
+/* Glitch loop for title */
+.glitch-title {
+  position: relative;
+}
+
+.glitch-title::before,
+.glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.0;
+}
+
+.glitch-title::before {
+  transform: translate(-2px, -1px);
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 45%);
+}
+
+.glitch-title::after {
+  transform: translate(2px, 1px);
+  clip-path: polygon(0 55%, 100% 45%, 100% 100%, 0 100%);
+}
+
+/* periodic glitch pulses */
+.glitch-title {
+  animation: title-jitter 10s infinite;
+}
+.glitch-title::before {
+  animation: title-slice 10s infinite;
+}
+.glitch-title::after {
+  animation: title-slice 10s infinite reverse;
+}
+
+@keyframes title-jitter {
+  0%, 77%, 100% { transform: translateX(0); }
+  78% { transform: translateX(-2px); }
+  79% { transform: translateX(2px); }
+  80% { transform: translateX(-1px); }
+  81% { transform: translateX(1px); }
+  82% { transform: translateX(0); }
+}
+
+@keyframes title-slice {
+  0%, 77%, 100% { opacity: 0; }
+  78% { opacity: 0.26; }
+  79% { opacity: 0.18; }
+  80% { opacity: 0.24; }
+  82% { opacity: 0; }
 }
 
 /* Menu list */
@@ -456,7 +496,7 @@ body {
   gap: 18px;
   border: 1px solid #e1e1e1;
   border-radius: 14px;
-  background: #fff;
+  background: rgba(255,255,255,0.92);
   overflow: hidden;
   box-shadow: 0 10px 26px rgba(0,0,0,0.04);
 }
@@ -466,7 +506,7 @@ body {
 }
 
 .menu-image-wrap {
-  background: #efefef;
+  background: rgba(239,239,239,0.9);
   display: grid;
   place-items: center;
   padding: 18px;

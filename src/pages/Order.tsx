@@ -7,13 +7,15 @@ import alpImg from "../assets/alpstrchzstk.svg";
 export default function Order() {
   return (
     <div className="app-shell order-page">
-      <div className="page">
-        {/* moving border (left/right) */}
-        <div className="rain-border left" aria-hidden="true">
-          <RecipeRain variant="border" columns={3} />
-        </div>
-        <div className="rain-border right" aria-hidden="true">
-          <RecipeRain variant="border" columns={3} />
+      <div className="page order-shell">
+        {/* Full background recipe rain behind everything */}
+        <RecipeRain variant="full" columns={10} className="order-rain-bg" />
+
+        {/* Title above menu */}
+        <div className="order-title-wrap" aria-hidden="true">
+          <div className="order-title glitch-title" data-text="s&\/\/!cH">
+            s&\/\/!cH
+          </div>
         </div>
 
         <div className="menu-list">
