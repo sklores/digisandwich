@@ -8,10 +8,10 @@ export default function Order() {
   return (
     <div className="app-shell order-page">
       <div className="page order-shell">
-        {/* Full background recipe rain behind everything */}
+        {/* Full background recipe rain */}
         <RecipeRain variant="full" columns={10} className="order-rain-bg" />
 
-        {/* Title above menu */}
+        {/* Title */}
         <div className="order-title-wrap" aria-hidden="true">
           <div className="order-title glitch-title" data-text="s&\/\/!cH">
             s&\/\/!cH
