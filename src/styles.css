@@ -1,7 +1,6 @@
 /* ---------- GLOBAL ---------- */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
-
 body {
   margin: 0;
   background: #f7f7f7;
@@ -9,7 +8,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* ---------- LAYOUT ---------- */
+/* ---------- SHELL / CARDS ---------- */
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -18,7 +17,8 @@ body {
   padding: 48px 16px 64px;
 }
 
-.page {
+.page,
+.hero {
   width: min(960px, 100%);
   background: #fcfcfc;
   border: 1px solid #e3e3e3;
@@ -30,47 +30,100 @@ body {
 }
 
 @media (max-width: 640px) {
-  .page {
+  .page,
+  .hero {
     padding: 54px 18px 64px;
     border-radius: 16px;
   }
 }
 
-/* ---------- RECIPE RAIN BACKGROUND ---------- */
+/* Light scanlines */
+.hero::after,
+.page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.18) 0px,
+    rgba(0,0,0,0.18) 1px,
+    rgba(255,255,255,0) 3px,
+    rgba(255,255,255,0) 6px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* ---------- RECIPE RAIN (shared component styles) ---------- */
+.recipe-rain {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: stretch;
+  justify-content: space-between;
+  pointer-events: none;
+  user-select: none;
+}
+
+.recipe-col { overflow: hidden; }
+
+.recipe-stream {
+  margin: 0;
+  padding: 0 10px;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, var(--alpha, 0.22));
+  transform: translateY(-55%) translateX(var(--drift, 0px));
+  animation: recipe-fall var(--dur, 9s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes recipe-fall {
+  0% { transform: translateY(-85%) translateX(var(--drift, 0px)); }
+  100% { transform: translateY(85%) translateX(var(--drift, 0px)); }
+}
+
+/* ---------- ORDER PAGE (this is the fix) ---------- */
 .order-shell {
   position: relative;
 }
 
+/* FULL BACKGROUND RAIN (behind everything) */
 .order-rain-bg {
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0.35;
+  opacity: 0.55; /* strong enough to be obvious */
 }
 
 .order-rain-bg .recipe-stream {
-  color: rgba(0, 0, 0, 0.22);
+  color: rgba(0, 0, 0, 0.20);
 }
 
-/* ---------- TITLE ---------- */
+/* TITLE ABOVE MENU */
 .order-title-wrap {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   justify-content: center;
-  margin-bottom: 24px;
+  margin: 0 0 22px;
 }
 
 .order-title {
   font-size: clamp(58px, 10vw, 110px);
-  font-weight: 750;
+  font-weight: 850;
   letter-spacing: 2px;
-  color: rgba(0, 0, 0, 0.14);
+  color: rgba(0, 0, 0, 0.18);
   line-height: 0.95;
   user-select: none;
 }
 
-/* glitch loop */
+/* Glitch loop */
 .glitch-title {
   position: relative;
 }
@@ -82,6 +135,7 @@ body {
   inset: 0;
   pointer-events: none;
   opacity: 0;
+  color: rgba(0, 0, 0, 0.22);
 }
 
 .glitch-title::before {
@@ -95,41 +149,40 @@ body {
 }
 
 .glitch-title {
-  animation: title-jitter 9s infinite;
+  animation: title-jitter 6.5s infinite;
 }
-
 .glitch-title::before {
-  animation: title-slice 9s infinite;
+  animation: title-slice 6.5s infinite;
 }
-
 .glitch-title::after {
-  animation: title-slice 9s infinite reverse;
+  animation: title-slice 6.5s infinite reverse;
 }
 
 @keyframes title-jitter {
-  0%, 80%, 100% { transform: translateX(0); }
-  81% { transform: translateX(-2px); }
-  82% { transform: translateX(2px); }
-  83% { transform: translateX(-1px); }
-  84% { transform: translateX(1px); }
-  85% { transform: translateX(0); }
+  0%, 70%, 100% { transform: translateX(0); }
+  71% { transform: translateX(-2px); }
+  72% { transform: translateX(2px); }
+  73% { transform: translateX(-1px); }
+  74% { transform: translateX(1px); }
+  75% { transform: translateX(0); }
 }
 
 @keyframes title-slice {
-  0%, 80%, 100% { opacity: 0; }
-  81% { opacity: 0.28; }
-  82% { opacity: 0.18; }
-  83% { opacity: 0.26; }
-  85% { opacity: 0; }
+  0%, 70%, 100% { opacity: 0; }
+  71% { opacity: 0.30; }
+  72% { opacity: 0.18; }
+  73% { opacity: 0.26; }
+  75% { opacity: 0; }
 }
 
-/* ---------- MENU ---------- */
+/* MENU (on top of rain) */
 .menu-list {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  margin-top: 0;
 }
 
 .menu-card {
@@ -161,9 +214,7 @@ body {
   opacity: 0.9;
 }
 
-.menu-content {
-  padding: 18px 18px 16px;
-}
+.menu-content { padding: 18px 18px 16px; }
 
 .menu-header {
   display: flex;
@@ -173,19 +224,6 @@ body {
   margin-bottom: 6px;
 }
 
-.menu-header h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.price {
-  font-weight: 800;
-  color: #111;
-}
-
-.menu-content p {
-  margin: 0;
-  color: #444;
-  line-height: 1.4;
-}
+.menu-header h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.price { font-weight: 800; color: #111; }
+.menu-content p { margin: 0; color: #444; line-height: 1.4; }

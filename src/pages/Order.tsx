@@ -5,19 +5,23 @@ import phodipImg from "../assets/phodip.svg";
 import alpImg from "../assets/alpstrchzstk.svg";
 
 export default function Order() {
+  // This renders exactly as: s&\/\/!cH
+  const TITLE = "s&\\/\\/!cH";
+
   return (
     <div className="app-shell order-page">
       <div className="page order-shell">
-        {/* Full background recipe rain */}
+        {/* Full-page background recipe rain */}
         <RecipeRain variant="full" columns={10} className="order-rain-bg" />
 
-        {/* Title */}
+        {/* Big title above menu */}
         <div className="order-title-wrap" aria-hidden="true">
-          <div className="order-title glitch-title" data-text="s&\/\/!cH">
-            s&\/\/!cH
+          <div className="order-title glitch-title" data-text={TITLE}>
+            {TITLE}
           </div>
         </div>
 
+        {/* Menu cards */}
         <div className="menu-list">
           <div className="menu-card">
             <div className="menu-image-wrap">
