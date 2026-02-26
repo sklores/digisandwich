@@ -206,8 +206,15 @@ body {
   letter-spacing: 0.5px;
   color: rgba(0, 0, 0, var(--alpha, 0.22));
   transform: translateY(-55%) translateX(var(--drift, 0px));
-  animation: recipe-fall var(--dur, 9s) linear infinite;
+  will-change: transform;
+  animation: recipe-fall var(--dur, 11s) linear infinite;
   animation-delay: var(--delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recipe-stream {
+    animation: none !important;
+  }
 }
 
 @keyframes recipe-fall {
