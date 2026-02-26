@@ -1,5 +1,5 @@
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import RecipeRain from "../components/RecipeRain";
 
 type BootFlash = {
@@ -13,6 +13,7 @@ type BootFlash = {
 
 export default function NotFoundLanding() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Boot terminal overlay (3 seconds)
   const [isBooting, setIsBooting] = useState(true);
@@ -351,7 +352,7 @@ export default function NotFoundLanding() {
         </form>
 
         {/* 5s recipe-rain takeover after password */}
-        {isRainTakeover && (
+        {isRainTakeover && location.pathname === "/" && (
           <div
             className={`rain-takeover ${isRainDissolving ? "rain-dissolve" : ""}`}
             aria-hidden="true"
