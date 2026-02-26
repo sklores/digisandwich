@@ -38,16 +38,16 @@ export default function RecipeRain({
   const count =
     typeof columns === "number"
       ? columns
-      : variant === "full"
-      ? 10
-      : 3; // borders use a few narrow columns
+      : typeof window !== "undefined" && window.innerWidth < 900
+      ? 6
+      : 10;
 
   const cols = useMemo(() => Array.from({ length: count }, (_, i) => i), [count]);
 
   // Duplicate lines so the loop feels continuous
   const content = useMemo(() => {
     const block = recipeLines.join("\n");
-    return `${block}\n${block}\n${block}`;
+    return `${block}\n${block}`;
   }, [recipeLines]);
 
   return (
