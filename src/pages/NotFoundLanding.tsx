@@ -1,5 +1,5 @@
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import RecipeRain from "../components/RecipeRain";
 
 type BootFlash = {
@@ -13,6 +13,7 @@ type BootFlash = {
 
 export default function NotFoundLanding() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Boot terminal overlay (3 seconds)
   const [isBooting, setIsBooting] = useState(true);
@@ -60,9 +61,6 @@ export default function NotFoundLanding() {
   const buttonLoopTimer = useRef<number | null>(null);
   const buttonGlitchTimer = useRef<number | null>(null);
 
-  // These two MUST NOT be cleared by any state-change effect
-  const dissolveTimer = useRef<number | null>(null);
-  const navigateTimer = useRef<number | null>(null);
 
   const charset = useMemo(
     () => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./\\:;+=-*#@!?",
@@ -246,39 +244,17 @@ export default function NotFoundLanding() {
     };
   }, [isBooting, isRainTakeover]);
 
-  // Cleanup only on unmount (safe)
-  useEffect(() => {
-    return () => {
-      if (dissolveTimer.current) window.clearTimeout(dissolveTimer.current);
-      if (navigateTimer.current) window.clearTimeout(navigateTimer.current);
-    };
-  }, []);
-
-  function startRainSequence() {
-    // prevent double-submits
-    if (isRainTakeover) return;
-
-    setIsRainTakeover(true);
-    setIsRainDissolving(false);
-
-    // dissolve near end
-    dissolveTimer.current = window.setTimeout(() => {
-      setIsRainDissolving(true);
-    }, 4200);
-
-    // navigate after 5 seconds — this timer will not be cleared by any effect
-    navigateTimer.current = window.setTimeout(() => {
-      navigate("/order");
-    }, 5000);
-  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!password.trim()) return;
 
-    pulse404(520);
-    runGlitchLineBurst(PROMPT_LINE, 520);
-    startRainSequence();
+    setIsRainTakeover(true);
+    setIsRainDissolving(false);
+
+    window.setTimeout(() => {
+      navigate("/order");
+    }, 5000);
   }
 
   return (
@@ -351,7 +327,7 @@ export default function NotFoundLanding() {
         </form>
 
         {/* 5s recipe-rain takeover after password */}
-        {isRainTakeover && (
+        {isRainTakeover && location.pathname === "/" && (
           <div
             className={`rain-takeover ${isRainDissolving ? "rain-dissolve" : ""}`}
             aria-hidden="true"
